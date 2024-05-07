@@ -1,0 +1,129 @@
+import java.util.*;
+
+class Ноутбук {
+    private String модель;
+    private int ОЗУ; // в гигабайтах
+    private int объемЖД; // в гигабайтах
+    private String операционнаяСистема;
+    private String цвет;
+
+    // конструктор
+    public Ноутбук(String модель, int ОЗУ, int объемЖД, String операционнаяСистема, String цвет) {
+        this.модель = модель;
+        this.ОЗУ = ОЗУ;
+        this.объемЖД = объемЖД;
+        this.операционнаяСистема = операционнаяСистема;
+        this.цвет = цвет;
+    }
+
+    // геттеры
+    public String getМодель() {
+        return модель;
+    }
+
+    public int getОЗУ() {
+        return ОЗУ;
+    }
+
+    public int getОбъемЖД() {
+        return объемЖД;
+    }
+
+    public String getОперационнаяСистема() {
+        return операционнаяСистема;
+    }
+
+    public String getЦвет() {
+        return цвет;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Создаем множество ноутбуков
+        Set<Ноутбук> ноутбуки = new HashSet<>();
+        ноутбуки.add(new Ноутбук("Lenovo", 8, 512, "Windows", "Черный"));
+        ноутбуки.add(new Ноутбук("Apple", 16, 1024, "macOS", "Серебристый"));
+        ноутбуки.add(new Ноутбук("HP", 4, 256, "Windows", "Синий"));
+        // Добавьте еще ноутбуков при необходимости
+
+        // Создаем карту для хранения критериев фильтрации
+        Map<Integer, Object> фильтр = new HashMap<>();
+
+        // Запрашиваем критерии фильтрации у пользователя
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите цифру, соответствующую необходимому критерию:");
+        System.out.println("1 - ОЗУ");
+        System.out.println("2 - Объем ЖД");
+        System.out.println("3 - Операционная система");
+        System.out.println("4 - Цвет");
+        int критерий = scanner.nextInt();
+
+        // Запрашиваем минимальные значения для указанных критериев
+        switch (критерий) {
+            case 1:
+                System.out.println("Введите минимальный объем ОЗУ (в гигабайтах):");
+                int минОЗУ = scanner.nextInt();
+                фильтр.put(критерий, минОЗУ);
+                break;
+            case 2:
+                System.out.println("Введите минимальный объем ЖД (в гигабайтах):");
+                int минОбъемЖД = scanner.nextInt();
+                фильтр.put(критерий, минОбъемЖД);
+                break;
+            case 3:
+                System.out.println("Введите операционную систему:");
+                String оперСистема = scanner.next();
+                фильтр.put(критерий, оперСистема);
+                break;
+            case 4:
+                System.out.println("Введите цвет:");
+                String цвет = scanner.next();
+                фильтр.put(критерий, цвет);
+                break;
+            default:
+                System.out.println("Некорректный критерий");
+                return;
+        }
+
+        // Фильтруем ноутбуки и выводим проходящие по условиям
+        for (Ноутбук ноутбук : ноутбуки) {
+            boolean подходит = true;
+            for (Map.Entry<Integer, Object> entry : фильтр.entrySet()) {
+                int крит = entry.getKey();
+                Object значение = entry.getValue();
+                switch (крит) {
+                    case 1:
+                        if (ноутбук.getОЗУ() < (int) значение) {
+                            подходит = false;
+                        }
+                        break;
+                    case 2:
+                        if (ноутбук.getОбъемЖД() < (int) значение) {
+                            подходит = false;
+                        }
+                        break;
+                    case 3:
+                        if (!ноутбук.getОперационнаяСистема().equalsIgnoreCase((String) значение)) {
+                            подходит = false;
+                        }
+                        break;
+                    case 4:
+                        if (!ноутбук.getЦвет().equalsIgnoreCase((String) значение)) {
+                            подходит = false;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (подходит) {
+                System.out.println("Модель: " + ноутбук.getМодель() +
+                        ", ОЗУ: " + ноутбук.getОЗУ() +
+                        ", Объем ЖД: " + ноутбук.getОбъемЖД() +
+                        ", Операционная система: " + ноутбук.getОперационнаяСистема() +
+                        ", Цвет: " + ноутбук.getЦвет());
+            }
+        }
+    }
+}
